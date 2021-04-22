@@ -231,21 +231,159 @@ where dvdk.IdDVDK = ( select cte.IdDVDK
 
 -- 21/ Tạo khung nhìn có tên là V_NHANVIEN để lấy được thông tin của tất cả các nhân viên có địa chỉ là “Hải Châu” và đã từng lập hợp đồng cho 1
 -- hoặc nhiều Khách hàng bất kỳ với ngày lập hợp đồng là “12/12/2019”
+create view V_NHANVIEN as
+select *
+from nhanvien nv
+where nv.IdNV = ( select distinct(hd.nhanvien_IdNV)
+				  from hopdong hd
+                  where nv.IdNV = hd.nhanvien_IdNV and hd.NgayLamHD = '2021-03-04'
+);
+
+
 -- 22/ Thông qua khung nhìn V_NHANVIEN thực hiện cập nhật địa chỉ thành “Liên Chiểu” đối với tất cả các Nhân viên được nhìn thấy bởi khung nhìn này.
+update v_nhanvien
+set DiaChi = 'Lien Chieu District, Da Nang City'
+where DiaChi = 'Hai Chau District, Da Nang City';
+
+
 -- 23/ Tạo Clustered Index có tên là IX_KHACHHANG trên bảng Khách hàng. Giải thích lý do và thực hiện kiểm tra tính hiệu quả của việc sử dụng INDEX
+create index `IX_KHACHHANG` on khachhang (`HoTen`, `NgaySinh`, `SoCMND`, `SDT`, `Email`, `DiaChi`) visible;
+-- Lý do: index được sử dụng để tăng tốc độ truy vấn và sẽ được sử dụng bởi cơ sở dữ liệu tìm kiếm để xác định vị trí bản ghi rất nhanh.
+
 
 -- 24/ Tạo Non-Clustered Index có tên là IX_SoDT_DiaChi trên các cột SODIENTHOAI và DIACHI trên bảng KHACH HANG và kiểm tra tính
 -- hiệu quả tìm kiếm sau khi tạo Index.
+
+
+
 -- 25/ Tạo Store procedure Sp_1 Dùng để xóa thông tin của một Khách hàng nào đó với Id Khách hàng được truyền vào như là 1 tham số của Sp_1
+DELIMITER //
+create procedure Sp_1 (in id int, out message varchar(50))
+if (id in (select IdKH from khachhang)) then
+begin
+	delete from khachhang where IdKH = id;
+    set message = 'Đã xóa khách hàng';
+end;
+else
+begin
+	set message = 'Khách hàng không tồn tại';
+end;
+end if;
+// DELIMITER ;
+
+call Sp_1(1, @message);
+select @message;
+
+
+
 -- 26/ Tạo Store procedure Sp_2 Dùng để thêm mới vào bảng HopDong với yêu cầu Sp_2 phải thực hiện kiểm tra tính hợp lệ của dữ liệu bổ sung, với
 -- nguyên tắc không được trùng khóa chính và đảm bảo toàn vẹn tham chiếu đến các bảng liên quan.
+DELIMITER //
+create procedure Sp_2 (in id int, in `start` datetime, in `end` datetime, in tiendatcoc int, in tongtien int,
+					   in nv int, in kh int, in dv int,
+					   out message varchar(50)
+)
+if ((id in (select IdHD from hopdong)) or (nv not in (select IdNV from nhanvien)) or (kh not in (select IdKH from khachhang))
+or (dv not in (select IdDV from dichvu))) then
+begin
+	set message = 'Thông tin không hợp lệ';
+end;
+else
+begin
+	insert into hopdong value (id, `start`, `end`, tiendatcoc, tongtien, nv, kh, dv);
+    set message = 'insert value thành công!';
+end;
+end if;
+// DELIMITER ;
+
+call Sp_2(9, '2021-04-01 00:00:00', '2021-04-04 00:00:00', 25000000, 50000000, 2, 3, 2, @message);
+select @message;
+
+
+
 -- 27/ Tạo triggers có tên Tr_1 Xóa bản ghi trong bảng HopDong thì hiển thị tổng số lượng bản ghi còn lại có trong bảng HopDong ra giao diện
 -- console của database
+drop table if exists `hopdong_del`;
+create table if not exists `hopdong_del` (
+  `IdHD` INT NOT NULL,
+  `NgayLamHD` DATETIME NOT NULL,
+  `NgayKetThuc` DATETIME NOT NULL,
+  `TienDatCoc` INT NOT NULL,
+  `TongTien` INT NOT NULL,
+  `NhanVien_IdNV` INT NOT NULL,
+  `KhachHang_IdKH` INT NOT NULL,
+  `DichVu_IdDV` INT NOT NULL,
+  `date` datetime,
+  action VARCHAR(50),
+  CONSTRAINT PK_HopDong PRIMARY KEY (`IdHD`),
+  CONSTRAINT FK_HopDong_NhanVien FOREIGN KEY (`NhanVien_IdNV`) REFERENCES NhanVien(`IdNV`),
+  CONSTRAINT FK_HopDong_KhachHang FOREIGN KEY (`KhachHang_IdKH`) REFERENCES KhachHang(`IdKH`),
+  CONSTRAINT FK_HopDong_DichVu FOREIGN KEY (`DichVu_IdDV`) REFERENCES DichVu(`IdDV`)
+) engine = InnoDB;
+
+drop trigger if exists `Tr_1`;
+DELIMITER //
+create trigger Tr_1
+after delete on hopdong
+for each row
+begin
+	insert into hopdong_del
+    set action = 'delete',
+    IdHD = old.IdHD,
+    NgayLamHD = old.NgayLamHD,
+    NgayKetThuc = old.NgayKetThuc,
+    TienDatCoc = old.TienDatCoc,
+    TongTien = old.TongTien,
+    NhanVien_IdNV = old.NhanVien_IdNV,
+    KhachHang_IdKH = old.KhachHang_IdKH,
+    DichVu_IdDV = old.DichVu_IdDV,
+    `date` = now();
+end;
+// DELIMITER ;
+
+delete
+from hopdong
+where IdHD = 8;
+
+select count(*) SoLuongHopDongConLai from hopdong;
+
+
 -- 28/ Tạo triggers có tên Tr_2 Khi cập nhật Ngày kết thúc hợp đồng, cần kiểm tra xem thời gian cập nhật có phù hợp hay không, với quy tắc sau: Ngày
 -- kết thúc hợp đồng phải lớn hơn ngày làm hợp đồng ít nhất là 2 ngày. Nếu dữ liệu hợp lệ thì cho phép cập nhật, nếu dữ liệu không hợp lệ thì in ra
 -- thông báo “Ngày kết thúc hợp đồng phải lớn hơn ngày làm hợp đồng ít nhất là 2 ngày” trên console của database
+drop trigger if exists Tr_2;
+DELIMITER //
+create trigger Tr_2
+before update on hopdong
+for each row
+if datediff(NgayKetThuc, NgayLamHD) > 2 then
+begin
+	insert into hopdong_upd
+    set action = 'update',
+    IdHD = old.IdHD,
+    NgayLamHD = old.NgayLamHD,
+    NgayKetThuc = old.NgayKetThuc,
+    TienDatCoc = old.TienDatCoc,
+    TongTien = old.TongTien,
+    NhanVien_IdNV = old.NhanVien_IdNV,
+    KhachHang_IdKH = old.KhachHang_IdKH,
+    DichVu_IdDV = old.DichVu_IdDV,
+    `date` = now();
+end;
+else
+begin
+	insert into hopdong_upd
+    set action = 'update not unsuccessful!';
+end;
+end if;
+// DELIMITER ;
+
+
+
+
 -- 29/ Tạo user function thực hiện yêu cầu sau:
 -- a/ Tạo user function func_1: Đếm các dịch vụ đã được sử dụng với Tổng tiền là &gt; 2.000.000 VNĐ.
+
 -- b/ Tạo user function Func_2: Tính khoảng thời gian dài nhất tính từ lúc bắt đầu làm hợp đồng đến lúc kết thúc hợp đồng mà Khách hàng đã
 -- thực hiện thuê dịch vụ (lưu ý chỉ xét các khoảng thời gian dựa vào từng lần làm hợp đồng thuê dịch vụ, không xét trên toàn bộ các lần
 -- làm hợp đồng). Mã của Khách hàng được truyền vào như là 1 tham số của function này.
