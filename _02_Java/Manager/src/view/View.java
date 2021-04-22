@@ -72,8 +72,8 @@ public class View {
 
 //        Bài 2e:
         System.out.println("Bài 2e:");
-        Arrays.sort(students, (s1, s2) -> s1.getAge() - s2.getAge());
-        Arrays.stream(students).filter(s -> s.getAge() == students[0].getAge())
+        final int age = Arrays.stream(students).min(Comparator.comparing(Student::getAge)).get().getAge();
+        Arrays.stream(students).filter(s -> s.getAge() == age)
                 .forEach(System.out::println);
     }
 }
