@@ -1,0 +1,15 @@
+caption, td {
+    color: darkolivegreen;
+}
+
+table {
+    background: darkseagreen;
+}
+
+button {
+    margin-left: 150px;
+}
+
+#inf {
+    text-align: center;
+}

@@ -1,0 +1,23 @@
+h1 {
+    font-family: 'Times New Roman', Times, serif;
+    color: tomato;
+    text-align: center;
+}
+
+.div {
+    display: flex;
+}
+
+#d1 {
+    margin-left: 10px;
+}
+
+img {
+    width: 300px;
+    height: 352px;
+}
+
+table, th, td {
+    border: 1px solid steelblue;
+    border-collapse: collapse;
+}

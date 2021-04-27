@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheet_12.css">
+</head>
+
+<body>
+    <form action="">
+        <table>
+            <caption><b>Phiếu đăng ký tham gia CTKM</b></caption>
+            <tr>
+                <td>Họ Tên</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Địa chỉ</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Điện thoại</td>
+                <td><input type="number"></td>
+            </tr>
+            <tr>
+                <td>Giới tính</td>
+                <td>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="gender" id="" value="checkedValue"
+                            checked>Nam
+                        <input type="radio" class="form-check-input" name="gender" id="" value="checkedValue">Nữ
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Nghề nghiệp</td>
+                <td>
+                    <select name="nn" id="nn">
+                        <option value="sv">Sinh viên</option>
+                        <option value="gv">Giáo viên</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Chọn sản phẩm tham gia</td>
+                <td>
+                    <select name="nn" id="nn" style="size: 2;" multiple="multiple">
+                        <option value="kdr">Kem đánh răng</option>
+                        <option value="st">Sữa tắm</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Số người dự đoán tham gia</td>
+                <td><input type="number"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="button" onclick="funcSubmit()">Đồng ý</button></td>
+            </tr>
+            <tr>
+                <td colspan="2" id="inf"></td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        function funcSubmit(){
+            document.getElementById("inf").innerHTML = "Đăng ký thành công!";
+        }
+    </script>
+</body>
+
+</html>

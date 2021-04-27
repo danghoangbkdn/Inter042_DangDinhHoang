@@ -1,0 +1,32 @@
+h1 {
+    text-align: center;
+    color: #006600;
+}
+
+#h3_1 {
+    color: #0000FF;
+    text-decoration: underline;
+}
+
+#h3_2 {
+    color: #FF3399;
+    background-color: #FECFFD;
+    text-align: center;
+}
+
+div {
+    background: #FFFFCC;
+    text-align: center;
+}
+
+#p1 {
+    color: #0000FF;
+}
+
+#p2 {
+    color: #e67b18;
+}
+
+#p3 {
+    color: green;
+}

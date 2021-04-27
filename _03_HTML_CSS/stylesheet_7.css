@@ -1,0 +1,21 @@
+h2 {
+    color: hotpink;
+    text-align: center;
+}
+
+h4 {
+    color: white;
+    background: salmon;
+}
+
+h5 {
+    background: tan;
+}
+
+.div {
+    display: flex;
+}
+
+img {
+    height: 332px;
+}

@@ -1,0 +1,18 @@
+body {
+    background-image: url("http://chaothailan.com/wp-content/uploads/2016/03/den-su-that-Thai-Lan-1.jpg");
+    width: 100%;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    color: #008888;
+}
+
+h2 {
+    text-align: center;
+}
+
+#p1 {
+    font-style: italic;
+    color: #FFFFFF;
+    background: #339999;
+}

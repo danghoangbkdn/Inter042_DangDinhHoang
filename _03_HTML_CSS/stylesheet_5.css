@@ -1,0 +1,22 @@
+h2 {
+    text-align: center;
+    color: green;
+}
+
+div p{
+    display: inline;
+}
+
+#p1 {
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+#p2 {
+    font-style: italic;
+}
+
+#p3 {
+    font-style: normal;
+    color: red;
+}

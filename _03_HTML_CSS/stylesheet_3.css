@@ -1,0 +1,17 @@
+body {
+    background: #A06D21;
+    background-image: URL("https://techvccloud.mediacdn.vn/zoom/650_406/2020/8/26/hacker-la-gi-1-1598432112870114396334-crop-15984321933331491192666.jpg");
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h2 {
+    text-align: center;
+    color: #FFCC00;
+}
+
+p {
+    color: #FFFFFF;
+}

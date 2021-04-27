@@ -1,0 +1,17 @@
+h2 {
+    text-align: center;
+    border: double goldenrod;
+    color: goldenrod;
+}
+
+div p{
+    display: inline;
+}
+
+.d1 {
+    text-align: left;
+}
+
+.d2 {
+    text-align: right;
+}
