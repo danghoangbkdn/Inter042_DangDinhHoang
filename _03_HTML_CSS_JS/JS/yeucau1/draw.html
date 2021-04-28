@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="stylesheet.css">
+        <script src="draw.js"></script>
+    </head>
+        
+    <body>
+        <form class="f">
+            <h4>1/ Draw an empty rectangle</h4>
+            Nhập n
+            <input type="text" id="n"></input>
+            Nhập m
+            <input type="text" id="m"></input>
+            <button type="button" onclick="funcDrawRectangle()">submit</button>
+
+            <h4>2/ Draw a square triangle with empty isosceles</h4>
+            Nhập h
+            <input id="h1" type="text"></input>
+            <button type="button" onclick="funcDrawTriangle()">submit</button>
+
+            <h4>3/ Draw an isosceles triangle</h4>
+            Nhập h
+            <input id="h2" type="text">
+            <button type="button" onclick="funcDrawTriangleIsosceles()">submit</button>
+
+            <h4>4/ Draw an empty triangle</h4>
+            Nhập h
+            <input id="h3" type="text">
+            <button type="button" onclick="funcDrawTriangleEmpty()">submit</button>
+        </form>
+    </body>
+</html>
